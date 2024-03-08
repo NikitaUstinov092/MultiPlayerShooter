@@ -8,7 +8,7 @@ using UnityEngine;
       private GameObject _player;
       
       [SerializeField]
-      private EnemyController _enemy;
+      private EnemyMover _enemy;
       
       private ColyseusRoom<State> _room;
       protected override void Awake()
@@ -45,13 +45,13 @@ using UnityEngine;
 
       private void CreatePlayer(Player player)
       {
-         var position = new Vector3(player.x, 0, player.y);
+         var position = new Vector3(player.pX, player.pY, player.pZ);
          Instantiate(_player, position, Quaternion.identity);
       }
       
       private void CreateEnemy(string key, Player enemy)
       {
-         var position = new Vector3(enemy.x, 0, enemy.y);
+         var position = new Vector3(enemy.pX, enemy.pY, enemy.pZ);
          var enemy1 = Instantiate(_enemy, position, Quaternion.identity);
          enemy.OnChange += enemy1.OnChange;
       }
