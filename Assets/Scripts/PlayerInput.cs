@@ -4,20 +4,33 @@ using UnityEngine.Serialization;
 
 public class PlayerInput : MonoBehaviour
 {
-    [FormerlySerializedAs("unitPlayer")] [FormerlySerializedAs("_player")] [SerializeField] 
-    private UnitPlayer _unitPlayer;
+    [FormerlySerializedAs("playerMove")] [SerializeField] 
+    private PlayerMove _playerMove;
+
+    [SerializeField] 
+    private MouseLook _mouseLook;
     private void Update()
     {
         var hor = Input.GetAxisRaw("Horizontal");
         var vert = Input.GetAxisRaw("Vertical");
-        _unitPlayer.SetDirection(hor, vert);
-        SendMove();
+
+        var mouseX = Input.GetAxis("Mouse X");
+        var mouseY = Input.GetAxis("Mouse Y");
+
+        if (Input.GetKeyDown(KeyCode.Space))
+            _playerMove.Jump();
+        
+        _playerMove.SetDirection(hor, vert);
+        _mouseLook.RotateX(-mouseY);
+        _mouseLook.RotateY(mouseX);
+        
+        SendMoveServer(); //TO DO Убрать в другой класс
     }
 
-    private void SendMove()
+    private void SendMoveServer()
     {
-        _unitPlayer.GetMoveInfo(out Vector3 position, out Vector3 velocity);
-        Dictionary<string, object> data = new Dictionary<string, object>()
+        _playerMove.GetMoveInfo(out Vector3 position, out Vector3 velocity);
+        var data = new Dictionary<string, object>()
         {
             { "pX", position.x },
             { "pY", position.y },
@@ -25,7 +38,6 @@ public class PlayerInput : MonoBehaviour
             { "vX", velocity.x },
             { "vY", velocity.y },
             { "vZ", velocity.z },
-            
         };
         MultiplayerManager.Instance.SendMessage("move", data);
     }

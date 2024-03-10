@@ -2,18 +2,19 @@ using System.Collections.Generic;
 using Colyseus.Schema;
 using DefaultNamespace;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class EnemyMover : MonoBehaviour
+public class EnemyMoveConfig : MonoBehaviour
 {
-    [SerializeField] 
-    private UnitEnemy _enemy;
+    [FormerlySerializedAs("_enemy")] [SerializeField] 
+    private EnemyMove enemyMove;
     
     private AverageIntervalCalculator _averageIntervalCalculator = new();
 
     public void OnChange(List<DataChange> changes)
     {
         _averageIntervalCalculator.SaveReceivedTime();
-        var position = _enemy.TargetPosition;
+        var position = enemyMove.TargetPosition;
         var velocity = Vector3.zero;
         
         foreach (var dataChanged in changes)
@@ -44,7 +45,7 @@ public class EnemyMover : MonoBehaviour
             }
         }
 
-        _enemy.SetPosition(position, velocity, _averageIntervalCalculator.GetAverageInterval());
+        enemyMove.SetPosition(position, velocity, _averageIntervalCalculator.GetAverageInterval());
     }
 
    

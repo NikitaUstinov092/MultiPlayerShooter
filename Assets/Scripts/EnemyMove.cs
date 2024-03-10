@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-    public class UnitEnemy: MonoBehaviour
+    public class EnemyMove: MonoBehaviour
     {
         public Vector3 TargetPosition { get; private set; } = Vector3.zero;
         private float _velocityMagnitude;
@@ -17,7 +17,7 @@ using UnityEngine;
             TargetPosition = transform.position;
         }
 
-        private void LateUpdate()
+        private void Update()
         {
             if (_velocityMagnitude > .1f)
             {

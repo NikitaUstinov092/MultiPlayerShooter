@@ -8,7 +8,7 @@ using UnityEngine;
       private GameObject _player;
       
       [SerializeField]
-      private EnemyMover _enemy;
+      private EnemyMoveConfig _enemy;
       
       private ColyseusRoom<State> _room;
       protected override void Awake()
