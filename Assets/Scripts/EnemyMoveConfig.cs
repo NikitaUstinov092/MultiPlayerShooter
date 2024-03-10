@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Colyseus.Schema;
 using DefaultNamespace;
@@ -10,7 +11,13 @@ public class EnemyMoveConfig : MonoBehaviour
     private EnemyMove enemyMove;
     
     private AverageIntervalCalculator _averageIntervalCalculator = new();
-
+    private Player _player;
+    public void Init(Player player)
+    {
+        _player = player;
+        enemyMove.SetSpeed(player.speed);
+        _player.OnChange += OnChange;
+    }
     public void OnChange(List<DataChange> changes)
     {
         _averageIntervalCalculator.SaveReceivedTime();
@@ -48,5 +55,9 @@ public class EnemyMoveConfig : MonoBehaviour
         enemyMove.SetPosition(position, velocity, _averageIntervalCalculator.GetAverageInterval());
     }
 
-   
+    private void OnDestroy()
+    {
+        _player.OnChange -= OnChange;
+        Destroy(gameObject);
+    }
 }

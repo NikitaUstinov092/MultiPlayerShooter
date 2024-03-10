@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerAnimationView : MonoBehaviour
+public class CharacterAnimationView : MonoBehaviour
 {
    private static readonly int Grounded = Animator.StringToHash("Grounded");
    private static readonly int Speed = Animator.StringToHash("Speed");

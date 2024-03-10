@@ -1,15 +1,22 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
     public class EnemyMove: CharacterMove
     {
         public Vector3 TargetPosition { get; private set; } = Vector3.zero;
         private float _velocityMagnitude;
+      
         
         public void SetPosition(in Vector3 position, in Vector3 velocity, in float averageInterval)
         {
             TargetPosition = position + Velocity * averageInterval;
-            _velocityMagnitude = Velocity.magnitude;
+            _velocityMagnitude = velocity.magnitude;
+            
+            Velocity = velocity;
+        }
+
+        public void SetSpeed(float value)
+        {
+            Speed = value;
         }
 
         private void Start()
