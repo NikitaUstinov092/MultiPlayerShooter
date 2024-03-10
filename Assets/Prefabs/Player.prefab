@@ -82,10 +82,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 486d33410139d5a4b9983e6540a19e32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 20
+  <Speed>k__BackingField: 2
   _rigidbody: {fileID: 5551523571461672028}
   _groundChecker: {fileID: 1254343258529211678}
-  _jumpForce: 30
+  _jumpForce: 8
+  _jumpDelay: 0.2
 --- !u!114 &7863509698243429606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,8 +201,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _groundChecker: {fileID: 1254343258529211678}
   _animator: {fileID: 4306174544333953790}
-  _rigidbody: {fileID: 5551523571461672028}
-  _maxSpeed: 0
+  _character: {fileID: 7699513063064689723}
 --- !u!1001 &7166114778720159338
 PrefabInstance:
   m_ObjectHideFlags: 0

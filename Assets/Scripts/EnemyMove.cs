@@ -1,15 +1,15 @@
 ﻿using System;
 using UnityEngine;
 
-    public class EnemyMove: MonoBehaviour
+    public class EnemyMove: CharacterMove
     {
         public Vector3 TargetPosition { get; private set; } = Vector3.zero;
         private float _velocityMagnitude;
         
         public void SetPosition(in Vector3 position, in Vector3 velocity, in float averageInterval)
         {
-            TargetPosition = position + velocity * averageInterval;
-            _velocityMagnitude = velocity.magnitude;
+            TargetPosition = position + Velocity * averageInterval;
+            _velocityMagnitude = Velocity.magnitude;
         }
 
         private void Start()

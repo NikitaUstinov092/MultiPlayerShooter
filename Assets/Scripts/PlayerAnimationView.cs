@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class PlayerAnimationView : MonoBehaviour
@@ -8,13 +7,12 @@ public class PlayerAnimationView : MonoBehaviour
    
    [SerializeField] private GroundChecker _groundChecker;
    [SerializeField] private Animator _animator;
-   [SerializeField] private Rigidbody _rigidbody;
-   [SerializeField] private float _maxSpeed;
+   [SerializeField] private CharacterMove _character;
    private void Update()
    {
-      var localVelocity = _rigidbody.transform.InverseTransformVector(_rigidbody.velocity);
+      var localVelocity = _character.transform.InverseTransformVector(_character.Velocity);
     
-      var speed = localVelocity.magnitude / _maxSpeed;
+      var speed = localVelocity.magnitude / _character.Speed;
       var sign = Mathf.Sign(localVelocity.z);
       
       _animator.SetFloat(Speed, speed * sign);

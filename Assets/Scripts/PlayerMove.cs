@@ -1,10 +1,7 @@
 using UnityEngine;
 
-public class PlayerMove : MonoBehaviour
+public class PlayerMove : CharacterMove
 {
-    [SerializeField]
-    private float _speed = 2;
-
     [SerializeField] 
     private Rigidbody _rigidbody;
 
@@ -23,9 +20,11 @@ public class PlayerMove : MonoBehaviour
     private void FixedUpdate()
     {
         var playerTransform = transform;
-        var velocity = (playerTransform.forward * _vert + playerTransform.right * _hor).normalized * _speed;
+        var velocity = (playerTransform.forward * _vert + playerTransform.right * _hor).normalized * Speed;
         velocity.y = _rigidbody.velocity.y;
-        _rigidbody.velocity = velocity;
+        Velocity = velocity;
+        
+        _rigidbody.velocity = Velocity;
     }
     
     public void SetDirection(float hor, float vert)
@@ -45,7 +44,7 @@ public class PlayerMove : MonoBehaviour
         if(_groundChecker.IsFly)
             return;
         
-        if(Time.deltaTime - _jumpTime < _jumpDelay)
+        if(Time.time - _jumpTime < _jumpDelay)
             return;
         
         _jumpTime = Time.time;
