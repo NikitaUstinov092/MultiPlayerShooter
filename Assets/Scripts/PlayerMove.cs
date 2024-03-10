@@ -13,8 +13,13 @@ public class PlayerMove : MonoBehaviour
 
     [SerializeField] 
     private float _jumpForce = 50f;
+   
+    [SerializeField] 
+    private float _jumpDelay = 0.2f;
     
+    private float _jumpTime;
     private float _hor, _vert;
+   
     private void FixedUpdate()
     {
         var playerTransform = transform;
@@ -39,6 +44,12 @@ public class PlayerMove : MonoBehaviour
     {
         if(_groundChecker.IsFly)
             return;
+        
+        if(Time.deltaTime - _jumpTime < _jumpDelay)
+            return;
+        
+        _jumpTime = Time.time;
+        
         _rigidbody.AddForce(0,_jumpForce,0, ForceMode.VelocityChange);
     }
 

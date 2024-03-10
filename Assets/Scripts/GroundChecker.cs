@@ -1,23 +1,32 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
     public class GroundChecker: MonoBehaviour
     {
         public bool IsFly = true;
+        [SerializeField] private float _radius;
+        [SerializeField] private LayerMask _layerMask;
+        [SerializeField] private float _coycoteTime = .15f;
 
-        private void OnCollisionStay(Collision other)
+        private float _flyTimer;
+        private void Update()
         {
-            var contactPoints = other.contacts;
-            for (var i = 0; i < contactPoints.Length; i++)
-            {
-                if (contactPoints[i].normal.y > .45f)
-                {
-                    IsFly = false;
-                }
-            }
+           if(Physics.CheckSphere(transform.position, _radius, _layerMask))
+           {
+               IsFly = false;
+               _flyTimer = 0;
+           }
+           else
+           {
+               _flyTimer += Time.deltaTime;
+               if(_flyTimer> _coycoteTime)
+                   IsFly = true;
+           }
         }
-
-        private void OnCollisionExit(Collision other)
+        #if UNITY_EDITOR
+        private void OnDrawGizmos()
         {
-            IsFly = true;
+            Gizmos.DrawWireSphere(transform.position, _radius);
         }
+        #endif
     }
