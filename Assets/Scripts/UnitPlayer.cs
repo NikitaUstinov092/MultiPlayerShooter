@@ -8,17 +8,19 @@ public class UnitPlayer : MonoBehaviour
 
     [SerializeField] 
     private Rigidbody _rigidbody;
-
-    [ShowInInspector, ReadOnly]
-    private Vector3 _direction;
-    private void Update()
+    private float _hor, _vert;
+    private void FixedUpdate()
     {
-        transform.position += _direction * (Time.deltaTime * _speed);
+        var playerTransform = transform;
+        var velocity = (playerTransform.forward * _vert + playerTransform.right * _hor).normalized * _speed;
+        _rigidbody.velocity = velocity;
     }
 
+   
     public void SetDirection(float hor, float vert)
     {
-        _direction = new Vector3(hor,0, vert).normalized;
+        _hor = hor;
+        _vert = vert;
     }
 
     public void GetMoveInfo(out Vector3 pos, out Vector3 velocity)
