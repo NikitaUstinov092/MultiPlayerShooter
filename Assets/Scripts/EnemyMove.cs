@@ -4,6 +4,7 @@
     {
         public Vector3 TargetPosition { get; private set; } = Vector3.zero;
         private float _velocityMagnitude;
+        [SerializeField] private Transform _head;
       
         
         public void SetPosition(in Vector3 position, in Vector3 velocity, in float averageInterval)
@@ -18,6 +19,16 @@
         {
             Speed = value;
         }
+        
+        public void SetRotateX(float value)
+        {
+            _head.localEulerAngles = new Vector3(value, 0, 0);
+        }
+        public void SetRotateY(float value)
+        {
+            transform.localEulerAngles = new Vector3(0, value, 0); 
+        }
+        
 
         private void Start()
         {

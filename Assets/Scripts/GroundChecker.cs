@@ -1,9 +1,9 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
     public class GroundChecker: MonoBehaviour
     {
         public bool IsFly = true;
+        
         [SerializeField] private float _radius;
         [SerializeField] private LayerMask _layerMask;
         [SerializeField] private float _coycoteTime = .15f;

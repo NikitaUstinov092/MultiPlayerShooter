@@ -10,7 +10,7 @@ public class EnemyMoveConfig : MonoBehaviour
     [FormerlySerializedAs("_enemy")] [SerializeField] 
     private EnemyMove enemyMove;
     
-    private AverageIntervalCalculator _averageIntervalCalculator = new();
+    private AverageIntervalCalculator _averageIntervalCalculator = new AverageIntervalCalculator();
     private Player _player;
     public void Init(Player player)
     {
@@ -21,8 +21,9 @@ public class EnemyMoveConfig : MonoBehaviour
     public void OnChange(List<DataChange> changes)
     {
         _averageIntervalCalculator.SaveReceivedTime();
-        var position = enemyMove.TargetPosition;
-        var velocity = Vector3.zero;
+        var position = transform.position;
+       // var position = enemyMove.TargetPosition;
+        var velocity = enemyMove.Velocity;
         
         foreach (var dataChanged in changes)
         {
@@ -46,6 +47,13 @@ public class EnemyMoveConfig : MonoBehaviour
                 case "vZ":
                     velocity.z = (float)dataChanged.Value;
                     break;
+                case "rX":
+                    enemyMove.SetRotateX((float)dataChanged.Value);
+                    break;
+                case "rY":
+                    enemyMove.SetRotateY((float)dataChanged.Value);
+                    break;
+                
                 default:
                     Debug.LogWarning("Не обрабатываются поля " + dataChanged.Field);
                     break;
@@ -55,7 +63,7 @@ public class EnemyMoveConfig : MonoBehaviour
         enemyMove.SetPosition(position, velocity, _averageIntervalCalculator.GetAverageInterval());
     }
 
-    private void OnDestroy()
+    public void Destroy()
     {
         _player.OnChange -= OnChange;
         Destroy(gameObject);

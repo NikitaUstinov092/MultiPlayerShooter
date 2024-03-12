@@ -20,7 +20,7 @@ using UnityEngine;
 
       private async void Connect()
       {
-         Dictionary<string, object> data = new()
+         Dictionary<string, object> data = new Dictionary<string, object>
          {
             { "speed", _player.Speed }
          };
@@ -59,7 +59,6 @@ using UnityEngine;
          var position = new Vector3(player.pX, player.pY, player.pZ);
          var enemy = Instantiate(_enemy, position, Quaternion.identity);
          enemy.Init(player);
-         player.OnChange += enemy.OnChange;
       }
 
       private void RemoveEnemy(string key, Player enemy)

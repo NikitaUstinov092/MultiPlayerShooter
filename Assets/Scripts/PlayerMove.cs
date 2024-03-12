@@ -9,6 +9,9 @@ public class PlayerMove : CharacterMove
     private GroundChecker _groundChecker;
 
     [SerializeField] 
+    private Transform _head; //TO DO Исправить потом дубль данных
+
+    [SerializeField] 
     private float _jumpForce = 50f;
    
     [SerializeField] 
@@ -33,10 +36,13 @@ public class PlayerMove : CharacterMove
         _vert = vert;
     }
 
-    public void GetMoveInfo(out Vector3 pos, out Vector3 velocity)
+    public void GetMoveInfo(out Vector3 pos, out Vector3 velocity, out float rotateX, out float rotateY)
     {
-        pos = transform.position;
+        var transform1 = transform;
+        pos = transform1.position;
         velocity = _rigidbody.velocity;
+        rotateX = _head.localEulerAngles.x; //TO DO Исправить потом дубль данных
+        rotateY = transform1.eulerAngles.y;
     }
 
     public void Jump()
@@ -51,6 +57,7 @@ public class PlayerMove : CharacterMove
         
         _rigidbody.AddForce(0,_jumpForce,0, ForceMode.VelocityChange);
     }
+
 
    
 }

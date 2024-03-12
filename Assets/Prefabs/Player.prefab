@@ -85,6 +85,7 @@ MonoBehaviour:
   <Speed>k__BackingField: 2
   _rigidbody: {fileID: 5551523571461672028}
   _groundChecker: {fileID: 1254343258529211678}
+  _head: {fileID: 3926913526512237783}
   _jumpForce: 8
   _jumpDelay: 0.2
 --- !u!114 &7863509698243429606

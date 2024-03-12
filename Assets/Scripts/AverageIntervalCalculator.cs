@@ -5,7 +5,7 @@ namespace DefaultNamespace
 {
     public class AverageIntervalCalculator
     {
-        private readonly List<float> _receivedTimeInterval = new() {0, 0, 0, 0 , 0};
+        private readonly List<float> _receivedTimeInterval = new List<float> {0, 0, 0, 0 , 0};
         private float _lastReceivedTime = 0;
         
         public float GetAverageInterval()

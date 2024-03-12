@@ -29,7 +29,7 @@ public class PlayerInput : MonoBehaviour
 
     private void SendMoveServer()
     {
-        _playerMove.GetMoveInfo(out Vector3 position, out Vector3 velocity);
+        _playerMove.GetMoveInfo(out Vector3 position, out Vector3 velocity, out float rotateX, out float rotateY);
         var data = new Dictionary<string, object>()
         {
             { "pX", position.x },
@@ -38,6 +38,8 @@ public class PlayerInput : MonoBehaviour
             { "vX", velocity.x },
             { "vY", velocity.y },
             { "vZ", velocity.z },
+            { "rX", rotateX },
+            { "rY", rotateY },
         };
         MultiplayerManager.Instance.SendMessage("move", data);
     }
