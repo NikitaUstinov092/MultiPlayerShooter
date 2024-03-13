@@ -76,5 +76,15 @@ using UnityEngine;
       {
          _room.Send(key, data);
       }
+      
+      public void SendMessage(string key, string data)
+      {
+         _room.Send(key, data);
+      }
+
+      public string GetClientKey()
+      {
+         return _room.SessionId;
+      }
    }
 
