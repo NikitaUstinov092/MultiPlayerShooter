@@ -63,7 +63,7 @@ public class EnemyMoveConfig : MonoBehaviour
         enemyMove.SetPosition(position, velocity, _averageIntervalCalculator.GetAverageInterval());
     }
 
-    public void OnDestroy()
+    public void Destroy()
     {
         _player.OnChange -= OnChange;
         Destroy(gameObject);

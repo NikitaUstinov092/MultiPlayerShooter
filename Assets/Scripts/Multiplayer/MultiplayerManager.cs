@@ -11,6 +11,22 @@ using UnityEngine;
       private EnemyMoveConfig _enemy;
       
       private ColyseusRoom<State> _room;
+
+      private Dictionary<string, EnemyMoveConfig> _enemies = new Dictionary<string, EnemyMoveConfig>();
+      public void SendMessage(string key, Dictionary<string, object> data)
+      {
+         _room.Send(key, data);
+      }
+      
+      public void SendMessage(string key, string data)
+      {
+         _room.Send(key, data);
+      }
+
+      public string GetClientKey()
+      {
+         return _room.SessionId;
+      }
       protected override void Awake()
       {
          base.Awake();
@@ -27,7 +43,10 @@ using UnityEngine;
          
          _room = await Instance.client.JoinOrCreate<State>("state_handler", data);
          _room.OnStateChange += OnChanged;
+
+         _room.OnMessage<string>("Shoot", ApplyShoot);
       }
+      
 
       private void OnChanged(State state, bool isfirststate)
       {
@@ -61,9 +80,15 @@ using UnityEngine;
          enemy.Init(player);
       }
 
-      private void RemoveEnemy(string key, Player enemy)
+      private void RemoveEnemy(string key, Player player)
       {
+         if(!_enemies.ContainsKey(key))
+            return;
+
+         var enemy = _enemies[key];
+         enemy.Destroy();
          
+         _enemies.Remove(key);
       }
        
       protected override void OnDestroy()
@@ -72,19 +97,17 @@ using UnityEngine;
          _room.Leave();
       }
 
-      public void SendMessage(string key, Dictionary<string, object> data)
+      private void ApplyShoot(string jsonShootInfo)
       {
-         _room.Send(key, data);
+         var shootInfo = JsonUtility.FromJson<ShootInfo>(jsonShootInfo);
+
+         if (!_enemies.ContainsKey(shootInfo.Key))
+         {
+            return;
+         }
+
+         _enemies[shootInfo.Key].Shoot(shootInfo);
       }
       
-      public void SendMessage(string key, string data)
-      {
-         _room.Send(key, data);
-      }
-
-      public string GetClientKey()
-      {
-         return _room.SessionId;
-      }
    }
 
