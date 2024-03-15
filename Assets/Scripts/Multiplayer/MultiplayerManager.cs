@@ -1,18 +1,21 @@
+using System;
 using System.Collections.Generic;
 using Colyseus;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
-   public class MultiplayerManager : ColyseusManager<MultiplayerManager>
+public class MultiplayerManager : ColyseusManager<MultiplayerManager>
    {
       [SerializeField]
-      private CharacterMove _player;
+      private GameObject _player;
       
       [SerializeField]
-      private EnemyMoveConfig _enemy;
+      private GameObject _enemy;
       
       private ColyseusRoom<State> _room;
-
-      private Dictionary<string, EnemyMoveConfig> _enemies = new Dictionary<string, EnemyMoveConfig>();
+      private EnemyStorage<GameObject> _enemyStorage = new EnemyStorage<GameObject>();
+      private CharacterFactory _characterFactory = new ();
+     
       public void SendMessage(string key, Dictionary<string, object> data)
       {
          _room.Send(key, data);
@@ -36,9 +39,9 @@ using UnityEngine;
 
       private async void Connect()
       {
-         Dictionary<string, object> data = new Dictionary<string, object>
+         var data = new Dictionary<string, object>
          {
-            { "speed", _player.Speed }
+            { "speed", _player.GetComponent<CharacterMove>().Speed }
          };
          
          _room = await Instance.client.JoinOrCreate<State>("state_handler", data);
@@ -47,7 +50,6 @@ using UnityEngine;
          _room.OnMessage<string>("Shoot", ApplyShoot);
       }
       
-
       private void OnChanged(State state, bool isfirststate)
       {
           if(!isfirststate)
@@ -58,37 +60,29 @@ using UnityEngine;
           {
              if (key == _room.SessionId)
              {
-                CreatePlayer(player);
+                _characterFactory.CreateCharacter(player, _player); //Cоздаём персонажа управляемого текущим клиентом
                 return;
              }
-             CreateEnemy(key, player);
+             CreateEnemy(key, player); //Cоздаём оппонента
           });
+          
           _room.State.players.OnAdd += CreateEnemy;
-          _room.State.players.OnRemove += RemoveEnemy;
+          _room.State.players.OnRemove += DestroyEnemy;
       }
-
-      private void CreatePlayer(Player player)
-      {
-         var position = new Vector3(player.pX, player.pY, player.pZ);
-         Instantiate(_player, position, Quaternion.identity);
-      }
-      
       private void CreateEnemy(string key, Player player)
       {
-         var position = new Vector3(player.pX, player.pY, player.pZ);
-         var enemy = Instantiate(_enemy, position, Quaternion.identity);
-         enemy.Init(player);
+         var enemy = _characterFactory.CreateCharacter(player, _enemy);
+         enemy.GetComponent<EnemyMoveConfig>().Init(player); 
+         _enemyStorage.AddEnemy(key,enemy);
       }
-
-      private void RemoveEnemy(string key, Player player)
+      
+      private void DestroyEnemy(string key, Player player)
       {
-         if(!_enemies.ContainsKey(key))
+         if(!_enemyStorage.HasEnemy(key, out var enemy))
             return;
-
-         var enemy = _enemies[key];
-         enemy.Destroy();
          
-         _enemies.Remove(key);
+         _enemyStorage.RemoveEnemy(key);
+         enemy.GetComponent<EnemyMoveConfig>().Destroy();
       }
        
       protected override void OnDestroy()
@@ -101,13 +95,25 @@ using UnityEngine;
       {
          var shootInfo = JsonUtility.FromJson<ShootInfo>(jsonShootInfo);
 
-         if (!_enemies.ContainsKey(shootInfo.Key))
+         if (!_enemyStorage.HasEnemy(shootInfo.Key, out var enemy ))
          {
             return;
          }
-
-         _enemies[shootInfo.Key].Shoot(shootInfo);
+         enemy.GetComponent<EnemyShoot>().Shoot(shootInfo);
       }
-      
    }
+
+
+public class CharacterFactory
+{
+   public GameObject CreateCharacter(Player player, GameObject prefab)
+   {
+      var position = new Vector3(player.pX, player.pY, player.pZ);
+      var character = Object.Instantiate(prefab, position, Quaternion.identity);
+      return character;
+   }
+}
+
+
+
 

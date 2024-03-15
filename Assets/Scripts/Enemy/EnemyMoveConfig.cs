@@ -1,16 +1,15 @@
-using System;
 using System.Collections.Generic;
 using Colyseus.Schema;
 using DefaultNamespace;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class EnemyMoveConfig : MonoBehaviour
 {
-    [FormerlySerializedAs("_enemy")] [SerializeField] 
+    [SerializeField] 
     private EnemyMove enemyMove;
     
     private AverageIntervalCalculator _averageIntervalCalculator = new AverageIntervalCalculator();
+    
     private Player _player;
     public void Init(Player player)
     {
@@ -18,7 +17,9 @@ public class EnemyMoveConfig : MonoBehaviour
         enemyMove.SetSpeed(player.speed);
         _player.OnChange += OnChange;
     }
-    public void OnChange(List<DataChange> changes)
+    
+
+    private void OnChange(List<DataChange> changes)
     {
         _averageIntervalCalculator.SaveReceivedTime();
         var position = transform.position;

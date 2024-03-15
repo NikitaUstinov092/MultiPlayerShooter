@@ -514,8 +514,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _colyseusSettings: {fileID: 11400000, guid: 2525345d7e342dd44b5fc3c154ce27a9, type: 2}
-  _player: {fileID: 7699513063064689723, guid: 800c6acbf4c1d114f9797e9fc9d8800f, type: 3}
-  _enemy: {fileID: 3639354692497580251, guid: f73f1123098321e4a918f94772664981, type: 3}
+  _player: {fileID: 7341914558108453717, guid: 800c6acbf4c1d114f9797e9fc9d8800f, type: 3}
+  _enemy: {fileID: 7341914558108453717, guid: f73f1123098321e4a918f94772664981, type: 3}
 --- !u!4 &1322041556
 Transform:
   m_ObjectHideFlags: 0
