@@ -13,7 +13,7 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
       private GameObject _enemy;
       
       private ColyseusRoom<State> _room;
-      private EnemyStorage<GameObject> _enemyStorage = new EnemyStorage<GameObject>();
+      private Storage<GameObject> _storage = new Storage<GameObject>();
       private CharacterFactory _characterFactory = new ();
      
       public void SendMessage(string key, Dictionary<string, object> data)
@@ -73,15 +73,15 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
       {
          var enemy = _characterFactory.CreateCharacter(player, _enemy);
          enemy.GetComponent<EnemyMoveConfig>().Init(player); 
-         _enemyStorage.AddEnemy(key,enemy);
+         _storage.Add(key,enemy);
       }
       
       private void DestroyEnemy(string key, Player player)
       {
-         if(!_enemyStorage.HasEnemy(key, out var enemy))
+         if(!_storage.HasElement(key, out var enemy))
             return;
          
-         _enemyStorage.RemoveEnemy(key);
+         _storage.Remove(key);
          enemy.GetComponent<EnemyMoveConfig>().Destroy();
       }
        
@@ -93,9 +93,10 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
 
       private void ApplyShoot(string jsonShootInfo)
       {
+         Debug.Log("ApplyShoot");
          var shootInfo = JsonUtility.FromJson<ShootInfo>(jsonShootInfo);
 
-         if (!_enemyStorage.HasEnemy(shootInfo.Key, out var enemy ))
+         if (!_storage.HasElement(shootInfo.Key, out var enemy ))
          {
             return;
          }

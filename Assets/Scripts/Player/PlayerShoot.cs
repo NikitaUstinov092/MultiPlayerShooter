@@ -8,7 +8,7 @@ public class PlayerShoot : MonoBehaviour
    
    [SerializeField] 
    private Bullet _bullet;
-   
+
    [SerializeField] 
    private Transform _spawnPoint;
    
@@ -19,6 +19,8 @@ public class PlayerShoot : MonoBehaviour
    private float _coolDown = 0.2f;
    
    private float _lastShootTime;
+
+   private Vector3 _velocity;
    
    [Button]
    public void Shoot()
@@ -26,7 +28,8 @@ public class PlayerShoot : MonoBehaviour
       if (!CanShoot())
          return;
       
-      Instantiate(_bullet, _spawnPoint.position, _spawnPoint.rotation).Release(_spawnPoint.forward, _speed);
+      _velocity = _spawnPoint.forward * _speed;
+      Instantiate(_bullet, _spawnPoint.position, _spawnPoint.rotation).Release(_velocity);
       OnShoot();
    }
 
@@ -34,15 +37,14 @@ public class PlayerShoot : MonoBehaviour
    {
      var info = new ShootInfo();
      var position = _spawnPoint.position;
-     var direction = _spawnPoint.forward;
-     
+
      info.PosX = position.x;
      info.PosY = position.y;
      info.PosZ = position.z;
      
-     info.DirX = direction.x;
-     info.DirY = direction.y;
-     info.DirZ = direction.z;
+     info.DirX = _velocity.x;
+     info.DirY = _velocity.y;
+     info.DirZ = _velocity.z;
      
      OnBulletReleased?.Invoke(info);
    }

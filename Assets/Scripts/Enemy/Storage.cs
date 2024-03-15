@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class EnemyStorage<T>
+public class Storage<T>
 {
     private readonly Dictionary<string, T> _enemies = new Dictionary<string, T>();
-    public void AddEnemy(string key, T enemy)
+    public void Add(string key, T enemy)
     {
         if (_enemies.ContainsKey(key))
         {
@@ -12,14 +12,14 @@ public class EnemyStorage<T>
         }
         _enemies.Add(key, enemy);
     }
-    public void RemoveEnemy(string key)
+    public void Remove(string key)
     {
         if (_enemies.ContainsKey(key))
         {
             _enemies.Remove(key);
         }
     }
-    public bool HasEnemy(string key, out T enemy)
+    public bool HasElement(string key, out T enemy)
     {
         if (_enemies.ContainsKey(key))
         {
