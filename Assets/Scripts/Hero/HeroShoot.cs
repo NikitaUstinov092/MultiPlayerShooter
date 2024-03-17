@@ -2,7 +2,7 @@ using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class PlayerShoot : MonoBehaviour
+public class HeroShoot : MonoBehaviour
 {
    public event Action<ShootInfo> OnBulletReleased;
    
@@ -11,6 +11,9 @@ public class PlayerShoot : MonoBehaviour
 
    [SerializeField] 
    private Transform _spawnPoint;
+
+   [SerializeField] 
+   private int _damage = 2;
    
    [SerializeField] 
    private float _speed = 10f;
@@ -21,7 +24,7 @@ public class PlayerShoot : MonoBehaviour
    private float _lastShootTime;
 
    private Vector3 _velocity;
-   
+
    [Button]
    public void Shoot()
    {
@@ -29,7 +32,7 @@ public class PlayerShoot : MonoBehaviour
          return;
       
       _velocity = _spawnPoint.forward * _speed;
-      Instantiate(_bullet, _spawnPoint.position, _spawnPoint.rotation).Release(_velocity);
+      Instantiate(_bullet, _spawnPoint.position, _spawnPoint.rotation).Release(_velocity, _damage);
       OnShoot();
    }
 

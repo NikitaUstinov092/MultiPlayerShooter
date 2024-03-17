@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class PlayerMove : CharacterMove
+public class HeroMove : CharacterMove
 {
     public event Action<Vector3, Vector3, float, float> OnPlayerMoved;
     

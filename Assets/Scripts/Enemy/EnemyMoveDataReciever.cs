@@ -3,7 +3,7 @@ using Colyseus.Schema;
 using DefaultNamespace;
 using UnityEngine;
 
-public class EnemyMoveConfig : MonoBehaviour
+public class EnemyMoveDataReciever : MonoBehaviour
 {
     [SerializeField] 
     private EnemyMove enemyMove;

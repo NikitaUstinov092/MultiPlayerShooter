@@ -1,12 +1,13 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class PlayerInput : MonoBehaviour
+public class HeroInput : MonoBehaviour
 { 
-    [SerializeField] 
-    private PlayerMove _playerMove;
+    [FormerlySerializedAs("_playerMove")] [SerializeField] 
+    private HeroMove heroMove;
 
-    [SerializeField] 
-    private PlayerShoot _playerShoot;
+    [FormerlySerializedAs("_playerShoot")] [SerializeField] 
+    private HeroShoot heroShoot;
 
     [SerializeField] 
     private MouseLook _mouseLook;
@@ -18,14 +19,14 @@ public class PlayerInput : MonoBehaviour
         var mouseX = Input.GetAxis("Mouse X");
         var mouseY = Input.GetAxis("Mouse Y");
         
-        _playerMove.SetDirection(hor, vert);
+        heroMove.SetDirection(hor, vert);
         _mouseLook.RotateX(-mouseY);
         _mouseLook.RotateY(mouseX);
         
         if(Input.GetMouseButtonDown(0))
-            _playerShoot.Shoot();
+            heroShoot.Shoot();
 
         if (Input.GetKeyDown(KeyCode.Space))
-            _playerMove.Jump();
+            heroMove.Jump();
     }
 }

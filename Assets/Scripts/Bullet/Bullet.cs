@@ -10,10 +10,13 @@ public class Bullet : MonoBehaviour
   [SerializeField] 
   private float _delay = 3f;
 
+  private int _damage;
+
   [Button]
-  public void Release(Vector3 velocity)
+  public void Release(Vector3 velocity, int damage = 0)
   {
     _rigidbody.velocity = velocity;
+    _damage = damage;
     StartCoroutine(DelayDestroy());
   }
 
@@ -22,14 +25,18 @@ public class Bullet : MonoBehaviour
     yield return new WaitForSecondsRealtime(_delay);
     Destroy();
   }
+  
+  private void OnCollisionEnter(Collision other)
+  {
+    if (other.gameObject.TryGetComponent(out IDamageable damageable))
+    { 
+      damageable.ReceiveDamage(_damage);
+    }
+    Destroy();
+  }
 
   private void Destroy()
   {
     Destroy(gameObject);
-  }
-
-  private void OnCollisionEnter(Collision other)
-  { 
-    Destroy();
   }
 }

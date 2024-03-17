@@ -80,6 +80,7 @@ GameObject:
   - component: {fileID: -1580274633836052732}
   - component: {fileID: 6636521430162700939}
   - component: {fileID: 629478537381520375}
+  - component: {fileID: 4992802829338608521}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -251,6 +252,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bullet: {fileID: 2047352997392572097, guid: fe60b72c3ad723a4c8a1ef4c1b2251ef, type: 3}
   _spawnPoint: {fileID: 6863400536189446071}
+  _damage: 2
   _speed: 10
   _coolDown: 0.3
 --- !u!114 &629478537381520375
@@ -267,6 +269,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerMove: {fileID: 7699513063064689723}
   _shoot: {fileID: 6636521430162700939}
+--- !u!114 &4992802829338608521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7341914558108453717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3ea0103f0fa437e90a0fb977bc62d64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxHealth: 2
 --- !u!1001 &7166114778720159338
 PrefabInstance:
   m_ObjectHideFlags: 0

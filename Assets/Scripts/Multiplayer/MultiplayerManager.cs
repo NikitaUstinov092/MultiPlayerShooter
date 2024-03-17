@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Colyseus;
 using UnityEngine;
@@ -13,9 +12,11 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
       private GameObject _enemy;
       
       private ColyseusRoom<State> _room;
+      
       private Storage<GameObject> _storage = new Storage<GameObject>();
+      
       private CharacterFactory _characterFactory = new ();
-     
+
       public void SendMessage(string key, Dictionary<string, object> data)
       {
          _room.Send(key, data);
@@ -25,7 +26,7 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
       {
          _room.Send(key, data);
       }
-
+      
       public string GetClientKey()
       {
          return _room.SessionId;
@@ -41,7 +42,8 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
       {
          var data = new Dictionary<string, object>
          {
-            { "speed", _player.GetComponent<CharacterMove>().Speed }
+            {"speed", _player.GetComponent<CharacterMove>().Speed}, 
+            {"hp", _player.GetComponent<HeroHealth>().GetMaxHP}
          };
          
          _room = await Instance.client.JoinOrCreate<State>("state_handler", data);
@@ -54,16 +56,15 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
       {
           if(!isfirststate)
              return;
-         
           
           state.players.ForEach((key, player) =>
           {
              if (key == _room.SessionId)
              {
-                _characterFactory.CreateCharacter(player, _player); //Cоздаём персонажа управляемого текущим клиентом
+                _characterFactory.CreateCharacter(player, _player); //Cоздаём персонажа управляемого текущим клиентом (Hero)
                 return;
              }
-             CreateEnemy(key, player); //Cоздаём оппонента
+             CreateEnemy(key, player); //Cоздаём оппонента (Enemy)
           });
           
           _room.State.players.OnAdd += CreateEnemy;
@@ -72,7 +73,7 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
       private void CreateEnemy(string key, Player player)
       {
          var enemy = _characterFactory.CreateCharacter(player, _enemy);
-         enemy.GetComponent<EnemyMoveConfig>().Init(player); 
+         enemy.GetComponent<EnemyMoveDataReciever>().Init(player); 
          _storage.Add(key,enemy);
       }
       
@@ -82,18 +83,18 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
             return;
          
          _storage.Remove(key);
-         enemy.GetComponent<EnemyMoveConfig>().Destroy();
+         enemy.GetComponent<EnemyMoveDataReciever>().Destroy();
       }
        
       protected override void OnDestroy()
       {
+         _room.OnStateChange -= OnChanged;
          base.OnDestroy();
          _room.Leave();
       }
 
       private void ApplyShoot(string jsonShootInfo)
       {
-         Debug.Log("ApplyShoot");
          var shootInfo = JsonUtility.FromJson<ShootInfo>(jsonShootInfo);
 
          if (!_storage.HasElement(shootInfo.Key, out var enemy ))

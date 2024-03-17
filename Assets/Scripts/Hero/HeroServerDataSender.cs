@@ -1,32 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-namespace DefaultNamespace.Common
-{
+
     /// <summary>
     /// TO DO убрать монобех
     /// </summary>
-    public class ServerDataSender: MonoBehaviour
+    public class HeroServerDataSender: MonoBehaviour
     {
-        [SerializeField] 
-        private PlayerMove _playerMove;
+        [FormerlySerializedAs("heroMove")] [FormerlySerializedAs("_playerMove")] [SerializeField] 
+        private HeroMove _move;
         
         [SerializeField] 
-        private PlayerShoot _shoot;
+        private HeroShoot _shoot;
 
         private MultiplayerManager _multiplayerManager;
         
         private void Awake()
         {
             _multiplayerManager = MultiplayerManager.Instance;
-            _playerMove.OnPlayerMoved += SendMoveData;
+            _move.OnPlayerMoved += SendMoveData;
             _shoot.OnBulletReleased += SendShootData;
         }
 
         private void OnDestroy()
         {
-            _playerMove.OnPlayerMoved -= SendMoveData;
+            _move.OnPlayerMoved -= SendMoveData;
             _shoot.OnBulletReleased -= SendShootData;
         }
         
@@ -34,7 +34,7 @@ namespace DefaultNamespace.Common
         {
             info.Key = _multiplayerManager.GetClientKey();
             var json = JsonUtility.ToJson(info);
-            _multiplayerManager.SendMessage("shoot", json);
+            _multiplayerManager.SendMessage("shooting", json);
         }
         
         private void SendMoveData(Vector3 position, Vector3 velocity, float rotateX, float rotateY)
@@ -50,10 +50,10 @@ namespace DefaultNamespace.Common
                 { "rX", rotateX },
                 { "rY", rotateY },
             };
-            _multiplayerManager.SendMessage("move", data);
+            _multiplayerManager.SendMessage("moving", data);
         }
     }
-}
+
 
 [Serializable]
 public struct ShootInfo
