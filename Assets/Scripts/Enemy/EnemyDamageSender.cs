@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class EnemyDamageDataSender : MonoBehaviour
+public class EnemyDamageSender : MonoBehaviour
 {
-    [SerializeField]
-    private DamageReciever damageReciever;
+    [FormerlySerializedAs("damageObserver")] [FormerlySerializedAs("damageReciever")] [SerializeField]
+    private EnemyDamageObserver enemyDamageObserver;
     
     private MultiplayerManager _multiplayerManager;
     private string _playerID;
@@ -12,12 +13,12 @@ public class EnemyDamageDataSender : MonoBehaviour
     private void Awake()
     {
         _multiplayerManager = MultiplayerManager.Instance;
-        damageReciever.OnDamageReceived += SendHealthData;
+        enemyDamageObserver.OnDamageReceived += SendHealthData;
     }
     
     private void OnDestroy()
     {
-        damageReciever.OnDamageReceived -= SendHealthData;
+        enemyDamageObserver.OnDamageReceived -= SendHealthData;
     }
    
     private void SendHealthData(int damage)

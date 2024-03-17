@@ -1,130 +1,60 @@
 using System.Collections.Generic;
 using Colyseus;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 public class MultiplayerManager : ColyseusManager<MultiplayerManager>
+{
+   [SerializeField]
+   private Config _startConfig;
+   private ColyseusRoom<State> _room;
+      
+   public ColyseusRoom<State> GetRoom()
    {
-      [SerializeField]
-      private GameObject _player;
-      
-      [SerializeField]
-      private GameObject _enemy;
-      
-      private ColyseusRoom<State> _room;
-      
-      private Storage<GameObject> _storage = new Storage<GameObject>();
-      
-      private CharacterFactory _characterFactory = new ();
+      return _room;
+   }
 
-      public void SendMessage(string key, Dictionary<string, object> data)
-      {
-         _room.Send(key, data);
-      }
+   public void SendMessage(string key, Dictionary<string, object> data)
+   {
+      _room.Send(key, data);
+   }
       
-      public void SendMessage(string key, string data)
-      {
-         _room.Send(key, data);
-      }
+   public void SendMessage(string key, string data)
+   {
+      _room.Send(key, data);
+   }
       
-      public string GetClientKey()
-      {
-         return _room.SessionId;
-      }
-      protected override void Awake()
-      {
-         base.Awake();
-         Instance.InitializeClient();
-         Connect();
-      }
+   public string GetClientKey()
+   {
+      return _room.SessionId;
+   }
+   protected override void Awake()
+   {
+      base.Awake();
+      Instance.InitializeClient();
+      Connect();
+   }
 
-      private async void Connect()
-      {
-         var data = new Dictionary<string, object>
-         {
-            {"speed", _player.GetComponent<CharacterMove>().Speed}, 
-            {"hp", _player.GetComponent<HeroHealth>().GetMaxHP}
-         };
+   private async void Connect()
+   {
+      _room = await Instance.client.JoinOrCreate<State>("state_handler", _startConfig.GetConfig());
+        
+      var roomHandlers = GetComponents<IGetColyseusRoom>();
          
-         _room = await Instance.client.JoinOrCreate<State>("state_handler", data);
-         _room.OnStateChange += OnChanged;
-
-         _room.OnMessage<string>("Shoot", ApplyShoot);
-      }
-      
-      private void OnChanged(State state, bool isfirststate)
+      foreach (var handler in roomHandlers)
       {
-          if(!isfirststate)
-             return;
-          
-          state.players.ForEach((key, player) =>
-          {
-             if (key == _room.SessionId)
-             {
-                CreateHero(player);
-                return;
-             }
-             CreateEnemy(key, player); 
-          });
-          
-          _room.State.players.OnAdd += CreateEnemy;
-          _room.State.players.OnRemove += DestroyEnemy;
+         handler.SendRoom(_room);
       }
-
-      //Cоздаём персонажа управляемого текущим клиентом (Hero)
-      private void CreateHero( Player player)
+   }
+   protected override void OnDestroy()
       {
-         var hero = _characterFactory.CreateCharacter(player, _player); 
-         hero.GetComponent<HeroDataReciever>().Init(player);
-      }
-    
-      //Cоздаём оппонента (Enemy)
-      private void CreateEnemy(string key, Player player)
-      {
-         var enemy = _characterFactory.CreateCharacter(player, _enemy);
-         enemy.GetComponent<EnemyDataReciever>().Init(player); 
-         enemy.GetComponent<EnemyDamageDataSender>().SetPlayerId(key);
-         _storage.Add(key,enemy);
-      }
-      
-      private void DestroyEnemy(string key, Player player)
-      {
-         if(!_storage.HasElement(key, out var enemy))
-            return;
-         
-         _storage.Remove(key);
-         enemy.GetComponent<EnemyDataReciever>().Destroy();
-      }
-       
-      protected override void OnDestroy()
-      {
-         _room.OnStateChange -= OnChanged;
          base.OnDestroy();
          _room.Leave();
       }
-
-      private void ApplyShoot(string jsonShootInfo)
-      {
-         var shootInfo = JsonUtility.FromJson<ShootInfo>(jsonShootInfo);
-
-         if (!_storage.HasElement(shootInfo.Key, out var enemy ))
-         {
-            return;
-         }
-         enemy.GetComponent<EnemyShoot>().Shoot(shootInfo);
-      }
+      
    }
 
 
-public class CharacterFactory
-{
-   public GameObject CreateCharacter(Player player, GameObject prefab)
-   {
-      var position = new Vector3(player.pX, player.pY, player.pZ);
-      var character = Object.Instantiate(prefab, position, Quaternion.identity);
-      return character;
-   }
-}
+
 
 
 

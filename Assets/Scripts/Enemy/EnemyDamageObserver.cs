@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class DamageReciever : MonoBehaviour, IDamageable
+public class EnemyDamageObserver : MonoBehaviour, IDamageable
 {
     public event Action<int> OnDamageReceived;
     
