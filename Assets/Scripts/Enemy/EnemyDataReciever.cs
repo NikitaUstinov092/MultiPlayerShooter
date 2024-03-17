@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using Colyseus.Schema;
 using DefaultNamespace;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class EnemyMoveDataReciever : MonoBehaviour
+public class EnemyDataReciever : MonoBehaviour
 {
-    [SerializeField] 
-    private EnemyMove enemyMove;
+    [FormerlySerializedAs("enemyMove")] [SerializeField] 
+    private EnemyMove _enemyMove;
+    
     
     private AverageIntervalCalculator _averageIntervalCalculator = new AverageIntervalCalculator();
     
@@ -14,17 +16,16 @@ public class EnemyMoveDataReciever : MonoBehaviour
     public void Init(Player player)
     {
         _player = player;
-        enemyMove.SetSpeed(player.speed);
+        _enemyMove.SetSpeed(player.speed);
         _player.OnChange += OnChange;
     }
-    
 
     private void OnChange(List<DataChange> changes)
     {
         _averageIntervalCalculator.SaveReceivedTime();
         var position = transform.position;
        // var position = enemyMove.TargetPosition;
-        var velocity = enemyMove.Velocity;
+        var velocity = _enemyMove.Velocity;
         
         foreach (var dataChanged in changes)
         {
@@ -49,19 +50,19 @@ public class EnemyMoveDataReciever : MonoBehaviour
                     velocity.z = (float)dataChanged.Value;
                     break;
                 case "rX":
-                    enemyMove.SetRotateX((float)dataChanged.Value);
+                    _enemyMove.SetRotateX((float)dataChanged.Value);
                     break;
                 case "rY":
-                    enemyMove.SetRotateY((float)dataChanged.Value);
+                    _enemyMove.SetRotateY((float)dataChanged.Value);
                     break;
-                
+
                 default:
                     Debug.LogWarning("Не обрабатываются поля " + dataChanged.Field);
                     break;
             }
         }
 
-        enemyMove.SetPosition(position, velocity, _averageIntervalCalculator.GetAverageInterval());
+        _enemyMove.SetPosition(position, velocity, _averageIntervalCalculator.GetAverageInterval());
     }
 
     public void Destroy()

@@ -61,19 +61,29 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
           {
              if (key == _room.SessionId)
              {
-                _characterFactory.CreateCharacter(player, _player); //Cоздаём персонажа управляемого текущим клиентом (Hero)
+                CreateHero(player);
                 return;
              }
-             CreateEnemy(key, player); //Cоздаём оппонента (Enemy)
+             CreateEnemy(key, player); 
           });
           
           _room.State.players.OnAdd += CreateEnemy;
           _room.State.players.OnRemove += DestroyEnemy;
       }
+
+      //Cоздаём персонажа управляемого текущим клиентом (Hero)
+      private void CreateHero( Player player)
+      {
+         var hero = _characterFactory.CreateCharacter(player, _player); 
+         hero.GetComponent<HeroDataReciever>().Init(player);
+      }
+    
+      //Cоздаём оппонента (Enemy)
       private void CreateEnemy(string key, Player player)
       {
          var enemy = _characterFactory.CreateCharacter(player, _enemy);
-         enemy.GetComponent<EnemyMoveDataReciever>().Init(player); 
+         enemy.GetComponent<EnemyDataReciever>().Init(player); 
+         enemy.GetComponent<EnemyDamageDataSender>().SetPlayerId(key);
          _storage.Add(key,enemy);
       }
       
@@ -83,7 +93,7 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
             return;
          
          _storage.Remove(key);
-         enemy.GetComponent<EnemyMoveDataReciever>().Destroy();
+         enemy.GetComponent<EnemyDataReciever>().Destroy();
       }
        
       protected override void OnDestroy()

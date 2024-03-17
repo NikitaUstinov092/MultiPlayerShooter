@@ -66,7 +66,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc10b8d8bfaa8da479d07a8a31ede9c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyMove: {fileID: 8140578520974020021}
+  _enemyMove: {fileID: 8140578520974020021}
 --- !u!136 &7793421375891847153
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6155ef2643088ce468bc1fa7f083383d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemyHealth: {fileID: 8336473192982483629}
+  damageReciever: {fileID: 8336473192982483629}
 --- !u!114 &8336473192982483629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,7 +161,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c28172e655e0930488e3cad3d9ead688, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealth: 20
 --- !u!1001 &5902039038174991417
 PrefabInstance:
   m_ObjectHideFlags: 0
