@@ -27,8 +27,9 @@ public class CharacterSpawner : MonoBehaviour, IGetColyseusRoom
       _room.OnStateChange += OnChanged;
    }
    private void OnDestroy()
-   {
-      _room.OnStateChange -= OnChanged;
+   { 
+      if(_room!=null) 
+         _room.OnStateChange -= OnChanged;
    }
    private void OnChanged(State state, bool isfirststate)
    {

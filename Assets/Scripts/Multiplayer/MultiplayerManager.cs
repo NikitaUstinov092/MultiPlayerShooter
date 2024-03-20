@@ -6,6 +6,7 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
 {
    [SerializeField]
    private Config _startConfig;
+   
    private ColyseusRoom<State> _room;
       
    public ColyseusRoom<State> GetRoom()
