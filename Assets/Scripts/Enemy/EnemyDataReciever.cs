@@ -6,9 +6,11 @@ using UnityEngine.Serialization;
 
 public class EnemyDataReciever : MonoBehaviour
 {
-    [FormerlySerializedAs("enemyMove")] [SerializeField] 
+    [SerializeField] 
     private EnemyMove _enemyMove;
     
+    [SerializeField] 
+    private EnemyHealth _enemyHp;
     
     private AverageIntervalCalculator _averageIntervalCalculator = new AverageIntervalCalculator();
     
@@ -24,7 +26,6 @@ public class EnemyDataReciever : MonoBehaviour
     {
         _averageIntervalCalculator.SaveReceivedTime();
         var position = transform.position;
-       // var position = enemyMove.TargetPosition;
         var velocity = _enemyMove.Velocity;
         
         foreach (var dataChanged in changes)
@@ -54,6 +55,10 @@ public class EnemyDataReciever : MonoBehaviour
                     break;
                 case "rY":
                     _enemyMove.SetRotateY((float)dataChanged.Value);
+                    break;
+                
+                case "hP":
+                    _enemyHp.ReceiveHealth((float)dataChanged.Value);
                     break;
 
                 default:

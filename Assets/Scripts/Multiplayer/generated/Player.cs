@@ -12,7 +12,7 @@ public partial class Player : Schema {
 	public float maxHP = default(float);
 
 	[Type(1, "number")]
-	public float hp = default(float);
+	public float hP = default(float);
 
 	[Type(2, "number")]
 	public float speed = default(float);

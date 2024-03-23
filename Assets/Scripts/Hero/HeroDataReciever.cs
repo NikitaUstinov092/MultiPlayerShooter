@@ -17,7 +17,7 @@ public class HeroDataReciever : MonoBehaviour
         {
             switch (dataChanged.Field)
             {
-                case "hp":
+                case "hP":
                     _heroHealth.SetUpHealth((float) dataChanged.Value);
                     break;
             }
