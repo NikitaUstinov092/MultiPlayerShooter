@@ -1,11 +1,13 @@
 ﻿using System;
+using Unity.Collections;
 using UnityEngine;
 
     public class HeroHealth: MonoBehaviour
     {
         public event Action OnDeath;
-        public int GetMaxHP => _maxHealth;
-        [SerializeField] private int _maxHealth;
+        
+        [SerializeField, ReadOnly] 
+        private int _maxHealth;
         
         private int _currentHealth;
 

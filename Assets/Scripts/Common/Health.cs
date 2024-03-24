@@ -2,15 +2,16 @@ using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class EnemyHealth : MonoBehaviour
+public class Health : MonoBehaviour
 {
    public event Action<int> OnHealthSetup; 
-   public event Action<int> OnHealthChanged; 
-   [field: SerializeField, ReadOnly] public int Health {get; private set;}
+   public event Action<int> OnHealthChanged;
+   public event Action OnDeath;
+   [field: SerializeField, ReadOnly] public int CurrentHealth {get; private set;}
 
    [SerializeField] private Config _startConfig;
 
-   private void Start()
+   protected void Start()
    {
       var config = _startConfig.GetConfig();
       if (!config.TryGetValue("hp", out var hp))
@@ -21,14 +22,15 @@ public class EnemyHealth : MonoBehaviour
    }
    private void SetUpHealth(int health)
    {
-      Debug.Log(Health + "ПЕРВОНАЧАЛЬНОЕ ЗДОРОВЬЕ");
-      Health = health;
-      OnHealthSetup?.Invoke(Health);
+      CurrentHealth = health;
+      OnHealthSetup?.Invoke(CurrentHealth);
    }
    public void ReceiveHealth(float health)
    {
-      Debug.Log("Здоровье изменено");
-      Health = (int)health;
-      OnHealthChanged?.Invoke(Health);
+      CurrentHealth = (int)health;
+      OnHealthChanged?.Invoke(CurrentHealth);
+     
+      if(CurrentHealth<=0)
+         OnDeath?.Invoke();
    }
 }

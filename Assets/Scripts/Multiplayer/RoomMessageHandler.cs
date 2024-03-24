@@ -12,8 +12,18 @@ public class RoomMessageHandler : MonoBehaviour, IGetColyseusRoom
         _room = MultiplayerManager.Instance.GetRoom();
         _storage = GetComponent<CharacterSpawner>().GetStorage(); //TO DO Убрать зависимость, уйти от монобехов
         _room.OnMessage<string>("Shoot", ApplyShoot);
+        _room.OnMessage<string>("Death", ApplyDeath);
     }
-    
+
+    private void ApplyDeath(string deadId)
+    {
+        if (!_storage.HasElement(deadId, out var enemy ))
+        {
+            return;
+        } 
+        enemy.GetComponent<DollSpawner>().CreateDoll();
+    }
+
     private void ApplyShoot(string jsonShootInfo)
     {
         var shootInfo = JsonUtility.FromJson<ShootInfo>(jsonShootInfo);

@@ -5,7 +5,7 @@ using UnityEngine;
 public class HeroDataReciever : MonoBehaviour
 {
     [SerializeField] 
-    private HeroHealth _heroHealth;
+    private Health _heroHealth;
     public void Init(Player player)
     {
         player.OnChange += SetHealth;
@@ -18,7 +18,7 @@ public class HeroDataReciever : MonoBehaviour
             switch (dataChanged.Field)
             {
                 case "hP":
-                    _heroHealth.SetUpHealth((float) dataChanged.Value);
+                    _heroHealth.ReceiveHealth((float) dataChanged.Value);
                     break;
             }
         }

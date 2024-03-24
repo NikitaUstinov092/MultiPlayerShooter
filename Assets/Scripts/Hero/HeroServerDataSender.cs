@@ -14,6 +14,9 @@ using UnityEngine.Serialization;
         
         [SerializeField] 
         private HeroShoot _shoot;
+        
+        [SerializeField] 
+        private Health _hp;
 
         private MultiplayerManager _multiplayerManager;
         
@@ -22,12 +25,14 @@ using UnityEngine.Serialization;
             _multiplayerManager = MultiplayerManager.Instance;
             _move.OnPlayerMoved += SendMoveData;
             _shoot.OnBulletReleased += SendShootData;
+            _hp.OnDeath += SendDeathData;
         }
 
         private void OnDestroy()
         {
             _move.OnPlayerMoved -= SendMoveData;
             _shoot.OnBulletReleased -= SendShootData;
+            _hp.OnDeath -= SendDeathData;
         }
         
         private void SendShootData(ShootInfo info)
@@ -35,6 +40,12 @@ using UnityEngine.Serialization;
             info.Key = _multiplayerManager.GetClientKey();
             var json = JsonUtility.ToJson(info);
             _multiplayerManager.SendMessage("shooting", json);
+        }
+
+        private void SendDeathData()
+        {
+            var deathPlayerId = _multiplayerManager.GetClientKey();
+            _multiplayerManager.SendMessage("death", deathPlayerId);
         }
         
         private void SendMoveData(Vector3 position, Vector3 velocity, float rotateX, float rotateY)

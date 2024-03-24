@@ -9,8 +9,8 @@ public class EnemyDataReciever : MonoBehaviour
     [SerializeField] 
     private EnemyMove _enemyMove;
     
-    [SerializeField] 
-    private EnemyHealth _enemyHp;
+    [FormerlySerializedAs("_enemyHp")] [SerializeField] 
+    private Health hp;
     
     private AverageIntervalCalculator _averageIntervalCalculator = new AverageIntervalCalculator();
     
@@ -58,7 +58,7 @@ public class EnemyDataReciever : MonoBehaviour
                     break;
                 
                 case "hP":
-                    _enemyHp.ReceiveHealth((float)dataChanged.Value);
+                    hp.ReceiveHealth((float)dataChanged.Value);
                     break;
 
                 default:

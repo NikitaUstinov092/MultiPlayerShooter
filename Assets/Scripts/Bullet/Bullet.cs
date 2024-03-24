@@ -17,13 +17,6 @@ public class Bullet : MonoBehaviour
   {
     _rigidbody.velocity = velocity;
     _damage = damage;
-    StartCoroutine(DelayDestroy());
-  }
-
-  private IEnumerator DelayDestroy()
-  {
-    yield return new WaitForSecondsRealtime(_delay);
-    Destroy();
   }
   
   private void OnCollisionEnter(Collision other)
